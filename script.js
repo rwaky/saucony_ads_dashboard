@@ -9,30 +9,56 @@ let roasChart = null;
 let efficiencyChart = null;
 let radarChart = null;
 
+// GitHub Pages 기본 경로 설정
+const GITHUB_BASE_URL = window.location.origin + window.location.pathname.replace(/\/$/, '');
+
 // 샘플 데이터
 const sampleData = [
-    { 채널: '네이버', 소재명: '봄 신상 특가 배너 A', 노출: 125000, 클릭: 3750, 전환: 187, 비용: 1875000, 매출: 9375000, 이미지URL: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400' },
-    { 채널: '네이버', 소재명: '여름 세일 이미지 B', 노출: 98000, 클릭: 2940, 전환: 147, 비용: 1470000, 매출: 7350000, 이미지URL: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400' },
-    { 채널: '메타', 소재명: '인스타 릴스 광고 C', 노출: 215000, 클릭: 6450, 전환: 322, 비용: 3225000, 매출: 16125000, 이미지URL: 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400' },
-    { 채널: '메타', 소재명: '페이스북 캐러셀 D', 노출: 178000, 클릭: 5340, 전환: 267, 비용: 2670000, 매출: 13350000, 이미지URL: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400' },
-    { 채널: '구글', 소재명: '검색광고 키워드 A', 노출: 89000, 클릭: 4450, 전환: 445, 비용: 4450000, 매출: 22250000, 이미지URL: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400' },
-    { 채널: '구글', 소재명: '디스플레이 배너 B', 노출: 156000, 클릭: 3120, 전환: 156, 비용: 1560000, 매출: 7800000, 이미지URL: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400' },
-    { 채널: '네이버', 소재명: '브랜드 검색 광고 E', 노출: 67000, 클릭: 3350, 전환: 335, 비용: 3350000, 매출: 16750000, 이미지URL: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400' },
-    { 채널: '메타', 소재명: '스토리 광고 F', 노출: 198000, 클릭: 5940, 전환: 297, 비용: 2970000, 매출: 14850000, 이미지URL: 'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?w=400' },
-    { 채널: '구글', 소재명: 'YouTube 범퍼 광고', 노출: 245000, 클릭: 4900, 전환: 245, 비용: 2450000, 매출: 12250000, 이미지URL: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400' },
-    { 채널: '네이버', 소재명: '쇼핑 라이브 배너', 노출: 134000, 클릭: 4020, 전환: 201, 비용: 2010000, 매출: 10050000, 이미지URL: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400' }
+    { 채널: '네이버', 소재명: '봄 신상 특가 배너 A', 노출: 125000, 클릭: 3750, 전환: 187, 비용: 1875000, 매출: 9375000, 이미지URL: 'images/sample_01.jpg' },
+    { 채널: '네이버', 소재명: '여름 세일 이미지 B', 노출: 98000, 클릭: 2940, 전환: 147, 비용: 1470000, 매출: 7350000, 이미지URL: 'images/sample_02.jpg' },
+    { 채널: '메타', 소재명: '인스타 릴스 광고 C', 노출: 215000, 클릭: 6450, 전환: 322, 비용: 3225000, 매출: 16125000, 이미지URL: 'images/sample_03.jpg' },
+    { 채널: '메타', 소재명: '페이스북 캐러셀 D', 노출: 178000, 클릭: 5340, 전환: 267, 비용: 2670000, 매출: 13350000, 이미지URL: 'images/sample_04.jpg' },
+    { 채널: '구글', 소재명: '검색광고 키워드 A', 노출: 89000, 클릭: 4450, 전환: 445, 비용: 4450000, 매출: 22250000, 이미지URL: 'images/sample_05.jpg' },
+    { 채널: '구글', 소재명: '디스플레이 배너 B', 노출: 156000, 클릭: 3120, 전환: 156, 비용: 1560000, 매출: 7800000, 이미지URL: 'images/sample_06.jpg' },
+    { 채널: '네이버', 소재명: '브랜드 검색 광고 E', 노출: 67000, 클릭: 3350, 전환: 335, 비용: 3350000, 매출: 16750000, 이미지URL: 'images/sample_07.jpg' },
+    { 채널: '메타', 소재명: '스토리 광고 F', 노출: 198000, 클릭: 5940, 전환: 297, 비용: 2970000, 매출: 14850000, 이미지URL: 'images/sample_08.jpg' },
+    { 채널: '구글', 소재명: 'YouTube 범퍼 광고', 노출: 245000, 클릭: 4900, 전환: 245, 비용: 2450000, 매출: 12250000, 이미지URL: 'images/sample_09.jpg' },
+    { 채널: '네이버', 소재명: '쇼핑 라이브 배너', 노출: 134000, 클릭: 4020, 전환: 201, 비용: 2010000, 매출: 10050000, 이미지URL: 'images/sample_10.jpg' }
 ];
 
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
+    checkForAutoLoad();
 });
+
+// 자동 로드 확인 (data/ad_data.csv 파일이 있으면 자동 로드)
+function checkForAutoLoad() {
+    fetch('data/ad_data.csv')
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            return null;
+        })
+        .then(text => {
+            if (text) {
+                console.log('data/ad_data.csv 파일 발견! 자동 로드합니다.');
+                const data = parseCSV(text);
+                processData(data);
+            }
+        })
+        .catch(error => {
+            console.log('data/ad_data.csv 파일이 없습니다. 수동 업로드 또는 샘플 데이터를 사용하세요.');
+        });
+}
 
 // 이벤트 리스너 설정
 function setupEventListeners() {
     const fileInput = document.getElementById('fileInput');
     const uploadArea = document.getElementById('uploadArea');
     const loadSampleBtn = document.getElementById('loadSampleBtn');
+    const loadGitHubBtn = document.getElementById('loadGitHubBtn');
     const applyDateFilter = document.getElementById('applyDateFilter');
     const searchBox = document.getElementById('searchBox');
 
@@ -47,6 +73,11 @@ function setupEventListeners() {
 
     // 샘플 데이터 로드
     loadSampleBtn.addEventListener('click', loadSampleData);
+    
+    // GitHub 데이터 로드
+    if (loadGitHubBtn) {
+        loadGitHubBtn.addEventListener('click', loadGitHubData);
+    }
 
     // 날짜 필터
     if (applyDateFilter) {
@@ -57,6 +88,35 @@ function setupEventListeners() {
     if (searchBox) {
         searchBox.addEventListener('input', applyFilters);
     }
+}
+
+// GitHub에서 데이터 로드
+function loadGitHubData() {
+    const btn = document.getElementById('loadGitHubBtn');
+    btn.disabled = true;
+    btn.textContent = '로딩 중...';
+    
+    fetch('data/ad_data.csv')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('data/ad_data.csv 파일을 찾을 수 없습니다.');
+            }
+            return response.text();
+        })
+        .then(text => {
+            const data = parseCSV(text);
+            processData(data);
+            btn.textContent = 'GitHub 데이터 로드 완료!';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'GitHub에서 데이터 로드';
+            }, 2000);
+        })
+        .catch(error => {
+            alert('GitHub 데이터 로드 실패:\n\n' + error.message + '\n\n확인사항:\n1. data/ad_data.csv 파일이 있나요?\n2. GitHub Pages 배포가 완료되었나요?');
+            btn.disabled = false;
+            btn.textContent = 'GitHub에서 데이터 로드';
+        });
 }
 
 // 드래그 오버
@@ -157,6 +217,20 @@ function loadSampleData() {
     processData(sampleData);
 }
 
+// 이미지 URL 처리 함수 (상대 경로를 절대 경로로 변환)
+function resolveImageURL(imageURL) {
+    if (!imageURL) return '';
+    
+    // 이미 http:// 또는 https://로 시작하면 그대로 반환
+    if (imageURL.startsWith('http://') || imageURL.startsWith('https://')) {
+        return imageURL;
+    }
+    
+    // 상대 경로면 현재 페이지 기준으로 변환
+    // images/banner.jpg → https://username.github.io/repo/images/banner.jpg
+    return imageURL;
+}
+
 // 데이터 처리
 function processData(data) {
     // 데이터 검증
@@ -184,7 +258,7 @@ function processData(data) {
         전환: Number(row['전환']) || 0,
         비용: Number(row['비용']) || 0,
         매출: Number(row['매출']) || 0,
-        이미지URL: row['이미지URL'] || '', // 선택 컬럼
+        이미지URL: resolveImageURL(row['이미지URL'] || ''), // 상대 경로 처리
         CTR: calculateCTR(row['클릭'], row['노출']),
         CPC: calculateCPC(row['비용'], row['클릭']),
         CVR: calculateCVR(row['전환'], row['클릭']),
@@ -517,9 +591,9 @@ function updateROASChart() {
     const roasData = sortedData.map(row => parseFloat(row['ROAS']));
     const colors = sortedData.map(row => {
         const roas = parseFloat(row['ROAS']);
-        if (roas >= 400) return 'rgba(34, 197, 94, 0.7)'; // 초록색 - 우수
-        if (roas >= 200) return 'rgba(59, 130, 246, 0.7)'; // 파란색 - 양호
-        return 'rgba(251, 146, 60, 0.7)'; // 주황색 - 보통
+        if (roas >= 400) return 'rgba(34, 197, 94, 0.7)';
+        if (roas >= 200) return 'rgba(59, 130, 246, 0.7)';
+        return 'rgba(251, 146, 60, 0.7)';
     });
     
     const ctx = document.getElementById('roasChart').getContext('2d');
@@ -581,7 +655,6 @@ function updateEfficiencyChart() {
             conversions: row['전환']
         }));
     
-    // 채널별로 데이터 분리
     const channels = [...new Set(scatterData.map(d => d.channel))];
     const datasets = channels.map(channel => {
         const channelData = scatterData.filter(d => d.channel === channel);
@@ -595,7 +668,7 @@ function updateEfficiencyChart() {
             data: channelData.map(d => ({
                 x: d.x,
                 y: d.y,
-                r: Math.sqrt(d.conversions) // 버블 크기는 전환 수에 비례
+                r: Math.sqrt(d.conversions)
             })),
             backgroundColor: color,
             borderColor: color.replace('0.6', '1'),
@@ -681,7 +754,6 @@ function updateRadarChart() {
         channelData[channel].revenue += row['매출'];
     });
     
-    // 정규화 (0-100 스케일)
     const maxValues = {
         impressions: Math.max(...Object.values(channelData).map(d => d.impressions)),
         clicks: Math.max(...Object.values(channelData).map(d => d.clicks)),
@@ -787,14 +859,13 @@ function updateTable() {
         tableBody.appendChild(tr);
     });
     
-    // DataTable 초기화
     if (dataTable) {
         dataTable.destroy();
     }
     
     dataTable = $('#dataTable').DataTable({
         pageLength: 10,
-        order: [[6, 'desc']], // 전환 기준 정렬
+        order: [[6, 'desc']],
         language: {
             lengthMenu: "_MENU_ 개씩 보기",
             zeroRecords: "데이터가 없습니다",
@@ -850,14 +921,12 @@ function updateGallery() {
         const channelClass = row['채널'] === '네이버' ? 'channel-naver' : 
                             row['채널'] === '메타' ? 'channel-meta' : 'channel-google';
         
-        // ROAS 색상 분류
         const roas = parseFloat(row['ROAS']);
         let roasClass = '';
         if (roas >= 400) roasClass = 'good';
         else if (roas >= 200) roasClass = '';
         else roasClass = 'warning';
         
-        // CTR 색상 분류
         const ctr = parseFloat(row['CTR']);
         let ctrClass = '';
         if (ctr >= 5) ctrClass = 'good';
@@ -910,7 +979,6 @@ function updateGallery() {
 
 // 이미지 모달 열기
 function openImageModal(row) {
-    // 모달이 없으면 생성
     let modal = document.getElementById('imageModal');
     if (!modal) {
         modal = document.createElement('div');
@@ -918,7 +986,6 @@ function openImageModal(row) {
         modal.className = 'image-modal';
         document.body.appendChild(modal);
         
-        // 모달 밖을 클릭하면 닫기
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 closeImageModal();
