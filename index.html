@@ -31,6 +31,7 @@
                 </svg>
                 <p class="upload-text">CSV 또는 Excel 파일을 드래그하거나 클릭하여 업로드</p>
                 <p class="upload-hint">필수 컬럼: 채널, 소재명, 노출, 클릭, 전환, 비용, 매출</p>
+                <p class="upload-hint-sub">선택 컬럼: 이미지URL (소재 이미지 표시)</p>
                 <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;">
                 <button class="btn-primary" onclick="document.getElementById('fileInput').click()">파일 선택</button>
             </div>
@@ -142,6 +143,16 @@
                 <h3>🕸️ 채널별 종합 성과 레이더</h3>
                 <canvas id="radarChart"></canvas>
             </div>
+        </section>
+
+        <!-- 소재 이미지 갤러리 섹션 -->
+        <section class="gallery-section" id="gallerySection" style="display: none;">
+            <h3>🖼️ 소재 이미지 갤러리</h3>
+            <div class="view-toggle">
+                <button class="toggle-btn active" data-view="gallery">갤러리 보기</button>
+                <button class="toggle-btn" data-view="list">리스트 보기</button>
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
         </section>
 
         <!-- 데이터 테이블 섹션 -->

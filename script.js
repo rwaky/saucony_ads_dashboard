@@ -11,16 +11,16 @@ let radarChart = null;
 
 // 샘플 데이터
 const sampleData = [
-    { 채널: '네이버', 소재명: '봄 신상 특가 배너 A', 노출: 125000, 클릭: 3750, 전환: 187, 비용: 1875000, 매출: 9375000 },
-    { 채널: '네이버', 소재명: '여름 세일 이미지 B', 노출: 98000, 클릭: 2940, 전환: 147, 비용: 1470000, 매출: 7350000 },
-    { 채널: '메타', 소재명: '인스타 릴스 광고 C', 노출: 215000, 클릭: 6450, 전환: 322, 비용: 3225000, 매출: 16125000 },
-    { 채널: '메타', 소재명: '페이스북 캐러셀 D', 노출: 178000, 클릭: 5340, 전환: 267, 비용: 2670000, 매출: 13350000 },
-    { 채널: '구글', 소재명: '검색광고 키워드 A', 노출: 89000, 클릭: 4450, 전환: 445, 비용: 4450000, 매출: 22250000 },
-    { 채널: '구글', 소재명: '디스플레이 배너 B', 노출: 156000, 클릭: 3120, 전환: 156, 비용: 1560000, 매출: 7800000 },
-    { 채널: '네이버', 소재명: '브랜드 검색 광고 E', 노출: 67000, 클릭: 3350, 전환: 335, 비용: 3350000, 매출: 16750000 },
-    { 채널: '메타', 소재명: '스토리 광고 F', 노출: 198000, 클릭: 5940, 전환: 297, 비용: 2970000, 매출: 14850000 },
-    { 채널: '구글', 소재명: 'YouTube 범퍼 광고', 노출: 245000, 클릭: 4900, 전환: 245, 비용: 2450000, 매출: 12250000 },
-    { 채널: '네이버', 소재명: '쇼핑 라이브 배너', 노출: 134000, 클릭: 4020, 전환: 201, 비용: 2010000, 매출: 10050000 }
+    { 채널: '네이버', 소재명: '봄 신상 특가 배너 A', 노출: 125000, 클릭: 3750, 전환: 187, 비용: 1875000, 매출: 9375000, 이미지URL: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400' },
+    { 채널: '네이버', 소재명: '여름 세일 이미지 B', 노출: 98000, 클릭: 2940, 전환: 147, 비용: 1470000, 매출: 7350000, 이미지URL: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400' },
+    { 채널: '메타', 소재명: '인스타 릴스 광고 C', 노출: 215000, 클릭: 6450, 전환: 322, 비용: 3225000, 매출: 16125000, 이미지URL: 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400' },
+    { 채널: '메타', 소재명: '페이스북 캐러셀 D', 노출: 178000, 클릭: 5340, 전환: 267, 비용: 2670000, 매출: 13350000, 이미지URL: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400' },
+    { 채널: '구글', 소재명: '검색광고 키워드 A', 노출: 89000, 클릭: 4450, 전환: 445, 비용: 4450000, 매출: 22250000, 이미지URL: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400' },
+    { 채널: '구글', 소재명: '디스플레이 배너 B', 노출: 156000, 클릭: 3120, 전환: 156, 비용: 1560000, 매출: 7800000, 이미지URL: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400' },
+    { 채널: '네이버', 소재명: '브랜드 검색 광고 E', 노출: 67000, 클릭: 3350, 전환: 335, 비용: 3350000, 매출: 16750000, 이미지URL: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400' },
+    { 채널: '메타', 소재명: '스토리 광고 F', 노출: 198000, 클릭: 5940, 전환: 297, 비용: 2970000, 매출: 14850000, 이미지URL: 'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?w=400' },
+    { 채널: '구글', 소재명: 'YouTube 범퍼 광고', 노출: 245000, 클릭: 4900, 전환: 245, 비용: 2450000, 매출: 12250000, 이미지URL: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400' },
+    { 채널: '네이버', 소재명: '쇼핑 라이브 배너', 노출: 134000, 클릭: 4020, 전환: 201, 비용: 2010000, 매출: 10050000, 이미지URL: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400' }
 ];
 
 // 초기화
@@ -184,6 +184,7 @@ function processData(data) {
         전환: Number(row['전환']) || 0,
         비용: Number(row['비용']) || 0,
         매출: Number(row['매출']) || 0,
+        이미지URL: row['이미지URL'] || '', // 선택 컬럼
         CTR: calculateCTR(row['클릭'], row['노출']),
         CPC: calculateCPC(row['비용'], row['클릭']),
         CVR: calculateCVR(row['전환'], row['클릭']),
@@ -198,6 +199,7 @@ function processData(data) {
     setupFilters();
     updateKPIs();
     updateCharts();
+    updateGallery();
     updateTable();
 }
 
@@ -227,7 +229,11 @@ function showDashboard() {
     document.getElementById('filterSection').style.display = 'flex';
     document.getElementById('kpiSection').style.display = 'grid';
     document.getElementById('chartSection').style.display = 'grid';
-    document.getElementById('tableSection').style.display = 'block';
+    document.getElementById('gallerySection').style.display = 'block';
+    document.getElementById('tableSection').style.display = 'none';
+    
+    // 갤러리 토글 버튼 이벤트
+    setupGalleryToggle();
 }
 
 // 필터 설정
@@ -267,6 +273,7 @@ function applyFilters() {
     
     updateKPIs();
     updateCharts();
+    updateGallery();
     updateTable();
 }
 
@@ -409,65 +416,6 @@ function updateTopCreativesChart() {
             }
         }
     });
-}
-
-// 테이블 업데이트
-function updateTable() {
-    const tableBody = document.querySelector('#dataTable tbody');
-    tableBody.innerHTML = '';
-    
-    filteredData.forEach(row => {
-        const tr = document.createElement('tr');
-        
-        const channelClass = row['채널'] === '네이버' ? 'channel-naver' : 
-                            row['채널'] === '메타' ? 'channel-meta' : 'channel-google';
-        
-        tr.innerHTML = `
-            <td><span class="channel-badge ${channelClass}">${row['채널']}</span></td>
-            <td>${row['소재명']}</td>
-            <td>${formatNumber(row['노출'])}</td>
-            <td>${formatNumber(row['클릭'])}</td>
-            <td>${row['CTR']}%</td>
-            <td>₩${formatNumber(row['CPC'])}</td>
-            <td>${formatNumber(row['전환'])}</td>
-            <td>${row['CVR']}%</td>
-            <td>₩${formatNumber(row['CPA'])}</td>
-            <td>${row['ROAS']}%</td>
-            <td>₩${formatNumber(row['비용'])}</td>
-            <td>₩${formatNumber(row['매출'])}</td>
-        `;
-        
-        tableBody.appendChild(tr);
-    });
-    
-    // DataTable 초기화
-    if (dataTable) {
-        dataTable.destroy();
-    }
-    
-    dataTable = $('#dataTable').DataTable({
-        pageLength: 10,
-        order: [[6, 'desc']], // 전환 기준 정렬
-        language: {
-            lengthMenu: "_MENU_ 개씩 보기",
-            zeroRecords: "데이터가 없습니다",
-            info: "_PAGE_ / _PAGES_ 페이지",
-            infoEmpty: "데이터 없음",
-            infoFiltered: "(전체 _MAX_ 개 중)",
-            search: "검색:",
-            paginate: {
-                first: "처음",
-                last: "마지막",
-                next: "다음",
-                previous: "이전"
-            }
-        }
-    });
-}
-
-// 숫자 포맷팅
-function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // CTR & CVR 비교 차트
@@ -808,4 +756,246 @@ function updateRadarChart() {
             }
         }
     });
+}
+
+// 테이블 업데이트
+function updateTable() {
+    const tableBody = document.querySelector('#dataTable tbody');
+    tableBody.innerHTML = '';
+    
+    filteredData.forEach(row => {
+        const tr = document.createElement('tr');
+        
+        const channelClass = row['채널'] === '네이버' ? 'channel-naver' : 
+                            row['채널'] === '메타' ? 'channel-meta' : 'channel-google';
+        
+        tr.innerHTML = `
+            <td><span class="channel-badge ${channelClass}">${row['채널']}</span></td>
+            <td>${row['소재명']}</td>
+            <td>${formatNumber(row['노출'])}</td>
+            <td>${formatNumber(row['클릭'])}</td>
+            <td>${row['CTR']}%</td>
+            <td>₩${formatNumber(row['CPC'])}</td>
+            <td>${formatNumber(row['전환'])}</td>
+            <td>${row['CVR']}%</td>
+            <td>₩${formatNumber(row['CPA'])}</td>
+            <td>${row['ROAS']}%</td>
+            <td>₩${formatNumber(row['비용'])}</td>
+            <td>₩${formatNumber(row['매출'])}</td>
+        `;
+        
+        tableBody.appendChild(tr);
+    });
+    
+    // DataTable 초기화
+    if (dataTable) {
+        dataTable.destroy();
+    }
+    
+    dataTable = $('#dataTable').DataTable({
+        pageLength: 10,
+        order: [[6, 'desc']], // 전환 기준 정렬
+        language: {
+            lengthMenu: "_MENU_ 개씩 보기",
+            zeroRecords: "데이터가 없습니다",
+            info: "_PAGE_ / _PAGES_ 페이지",
+            infoEmpty: "데이터 없음",
+            infoFiltered: "(전체 _MAX_ 개 중)",
+            search: "검색:",
+            paginate: {
+                first: "처음",
+                last: "마지막",
+                next: "다음",
+                previous: "이전"
+            }
+        }
+    });
+}
+
+// 숫자 포맷팅
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// 갤러리 토글 설정
+function setupGalleryToggle() {
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const view = this.dataset.view;
+            if (view === 'gallery') {
+                document.getElementById('gallerySection').style.display = 'block';
+                document.getElementById('tableSection').style.display = 'none';
+            } else {
+                document.getElementById('gallerySection').style.display = 'none';
+                document.getElementById('tableSection').style.display = 'block';
+            }
+        });
+    });
+}
+
+// 갤러리 업데이트
+function updateGallery() {
+    const galleryGrid = document.getElementById('galleryGrid');
+    galleryGrid.innerHTML = '';
+    
+    filteredData.forEach((row, index) => {
+        const card = document.createElement('div');
+        card.className = 'gallery-card';
+        card.onclick = () => openImageModal(row);
+        
+        const channelClass = row['채널'] === '네이버' ? 'channel-naver' : 
+                            row['채널'] === '메타' ? 'channel-meta' : 'channel-google';
+        
+        // ROAS 색상 분류
+        const roas = parseFloat(row['ROAS']);
+        let roasClass = '';
+        if (roas >= 400) roasClass = 'good';
+        else if (roas >= 200) roasClass = '';
+        else roasClass = 'warning';
+        
+        // CTR 색상 분류
+        const ctr = parseFloat(row['CTR']);
+        let ctrClass = '';
+        if (ctr >= 5) ctrClass = 'good';
+        else if (ctr >= 3) ctrClass = '';
+        else ctrClass = 'warning';
+        
+        const imageHTML = row['이미지URL'] ? 
+            `<img src="${row['이미지URL']}" alt="${row['소재명']}" onerror="this.parentElement.innerHTML='<div class=\\'no-image-placeholder\\'><div>🖼️</div><div class=\\'no-image-text\\'>이미지 없음</div></div>';">` :
+            `<div class="no-image-placeholder"><div>🖼️</div><div class="no-image-text">이미지 없음</div></div>`;
+        
+        card.innerHTML = `
+            <div class="gallery-image">
+                ${imageHTML}
+            </div>
+            <div class="gallery-info">
+                <span class="gallery-channel ${channelClass}">${row['채널']}</span>
+                <div class="gallery-title">${row['소재명']}</div>
+                <div class="gallery-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">노출</span>
+                        <span class="metric-value">${formatNumber(row['노출'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">클릭</span>
+                        <span class="metric-value">${formatNumber(row['클릭'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">CTR</span>
+                        <span class="metric-value ${ctrClass}">${row['CTR']}%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">ROAS</span>
+                        <span class="metric-value ${roasClass}">${row['ROAS']}%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">전환</span>
+                        <span class="metric-value">${formatNumber(row['전환'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">매출</span>
+                        <span class="metric-value good">₩${formatNumber(row['매출'])}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        galleryGrid.appendChild(card);
+    });
+}
+
+// 이미지 모달 열기
+function openImageModal(row) {
+    // 모달이 없으면 생성
+    let modal = document.getElementById('imageModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'imageModal';
+        modal.className = 'image-modal';
+        document.body.appendChild(modal);
+        
+        // 모달 밖을 클릭하면 닫기
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeImageModal();
+            }
+        });
+    }
+    
+    const channelClass = row['채널'] === '네이버' ? 'channel-naver' : 
+                        row['채널'] === '메타' ? 'channel-meta' : 'channel-google';
+    
+    const imageHTML = row['이미지URL'] ? 
+        `<img src="${row['이미지URL']}" alt="${row['소재명']}">` :
+        `<div class="no-image-placeholder" style="height: 400px;">
+            <div style="font-size: 5rem;">🖼️</div>
+            <div class="no-image-text">이미지가 없습니다</div>
+        </div>`;
+    
+    modal.innerHTML = `
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content">
+            ${imageHTML}
+            <div class="modal-info">
+                <span class="gallery-channel ${channelClass}">${row['채널']}</span>
+                <h2 class="modal-title">${row['소재명']}</h2>
+                <div class="modal-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">👁️ 노출</span>
+                        <span class="metric-value">${formatNumber(row['노출'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">🖱️ 클릭</span>
+                        <span class="metric-value">${formatNumber(row['클릭'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">✅ 전환</span>
+                        <span class="metric-value">${formatNumber(row['전환'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">📈 CTR</span>
+                        <span class="metric-value">${row['CTR']}%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">🎯 CVR</span>
+                        <span class="metric-value">${row['CVR']}%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">💵 CPC</span>
+                        <span class="metric-value">₩${formatNumber(row['CPC'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">💰 CPA</span>
+                        <span class="metric-value">₩${formatNumber(row['CPA'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">📊 ROAS</span>
+                        <span class="metric-value">${row['ROAS']}%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">💸 비용</span>
+                        <span class="metric-value">₩${formatNumber(row['비용'])}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">💵 매출</span>
+                        <span class="metric-value good">₩${formatNumber(row['매출'])}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+}
+
+// 이미지 모달 닫기
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
 }
