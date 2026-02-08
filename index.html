@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합 광고 소재 성과 대시보드</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <!-- XLSX Library for Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 통합 광고 소재 성과 대시보드</h1>
+            <p class="subtitle">네이버 · 메타 · 구글 광고 성과를 한눈에</p>
+        </header>
+
+        <!-- 파일 업로드 섹션 -->
+        <section class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <p class="upload-text">CSV 또는 Excel 파일을 드래그하거나 클릭하여 업로드</p>
+                <p class="upload-hint">필수 컬럼: 채널, 소재명, 노출, 클릭, 전환, 비용, 매출</p>
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;">
+                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">파일 선택</button>
+            </div>
+            <button class="btn-secondary" id="loadSampleBtn">샘플 데이터 로드</button>
+        </section>
+
+        <!-- 필터 섹션 -->
+        <section class="filter-section" id="filterSection" style="display: none;">
+            <div class="filter-group">
+                <label>채널 필터:</label>
+                <div class="filter-chips" id="channelFilters"></div>
+            </div>
+            <div class="filter-group">
+                <label>기간 필터:</label>
+                <input type="date" id="startDate">
+                <span>~</span>
+                <input type="date" id="endDate">
+                <button class="btn-filter" id="applyDateFilter">적용</button>
+            </div>
+            <div class="filter-group">
+                <label>검색:</label>
+                <input type="text" id="searchBox" placeholder="소재명 검색...">
+            </div>
+        </section>
+
+        <!-- KPI 카드 섹션 -->
+        <section class="kpi-section" id="kpiSection" style="display: none;">
+            <div class="kpi-card">
+                <div class="kpi-icon">👁️</div>
+                <div class="kpi-content">
+                    <h3>총 노출</h3>
+                    <p class="kpi-value" id="totalImpressions">0</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">🖱️</div>
+                <div class="kpi-content">
+                    <h3>총 클릭</h3>
+                    <p class="kpi-value" id="totalClicks">0</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📈</div>
+                <div class="kpi-content">
+                    <h3>평균 CTR</h3>
+                    <p class="kpi-value" id="avgCTR">0%</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-content">
+                    <h3>총 비용</h3>
+                    <p class="kpi-value" id="totalCost">₩0</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-content">
+                    <h3>총 전환</h3>
+                    <p class="kpi-value" id="totalConversions">0</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">🎯</div>
+                <div class="kpi-content">
+                    <h3>평균 CVR</h3>
+                    <p class="kpi-value" id="avgCVR">0%</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💵</div>
+                <div class="kpi-content">
+                    <h3>평균 CPA</h3>
+                    <p class="kpi-value" id="avgCPA">₩0</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📊</div>
+                <div class="kpi-content">
+                    <h3>평균 ROAS</h3>
+                    <p class="kpi-value" id="avgROAS">0%</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 차트 섹션 -->
+        <section class="chart-section" id="chartSection" style="display: none;">
+            <div class="chart-container">
+                <h3>📊 채널별 성과 비교</h3>
+                <canvas id="channelChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>📈 상위 10개 소재 성과</h3>
+                <canvas id="topCreativesChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>📉 채널별 CTR & CVR 비교</h3>
+                <canvas id="ctrCvrChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>💰 소재별 ROAS 상위 10</h3>
+                <canvas id="roasChart"></canvas>
+            </div>
+            <div class="chart-container full-width">
+                <h3>🎯 CPA vs ROAS 효율성 분석 (버블 차트)</h3>
+                <canvas id="efficiencyChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>🕸️ 채널별 종합 성과 레이더</h3>
+                <canvas id="radarChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 데이터 테이블 섹션 -->
+        <section class="table-section" id="tableSection" style="display: none;">
+            <h3>📋 상세 데이터</h3>
+            <div class="table-wrapper">
+                <table id="dataTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>채널</th>
+                            <th>소재명</th>
+                            <th>노출</th>
+                            <th>클릭</th>
+                            <th>CTR</th>
+                            <th>CPC</th>
+                            <th>전환</th>
+                            <th>CVR</th>
+                            <th>CPA</th>
+                            <th>ROAS</th>
+                            <th>비용</th>
+                            <th>매출</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer>
+            <p>💡 Tip: CSV 파일 형식 - 채널, 소재명, 노출, 클릭, 전환, 비용, 매출 컬럼 필요</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
